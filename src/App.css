@@ -1,21 +1,37 @@
 /* Layout */
 
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-html , body{
-    height: 100%;
-    width: 100%;
-    
-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif 
+html,
+body {
+  height: 100%;
+  width: 100%;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
 }
 
 .top-bar {
@@ -27,9 +43,6 @@ font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, O
 }
 
 .navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 1rem 2rem;
   border-bottom: 1px solid var(--border);
   background: #ffffffcc;
@@ -37,6 +50,12 @@ font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, O
   position: sticky;
   top: 0;
   z-index: 20;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .navbar-left {
@@ -103,6 +122,14 @@ font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, O
   width: 100%;
 }
 
+.nav-link.active {
+  color: var(--accent);
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
 .navbar-right {
   display: flex;
   align-items: center;
@@ -160,7 +187,7 @@ main {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
   gap: 3rem;
-  padding: 3rem 2rem 2.5rem;
+  padding: 3rem 0 2.5rem;
   background: radial-gradient(
     circle at 10% 0,
     #fce7f3,
@@ -290,7 +317,7 @@ main {
       rgba(161, 98, 7, 0.4) 40%,
       rgba(249, 115, 22, 0.8) 100%
     ),
-    url("https://picsum.photos/seed/hero-rug/900/600");
+    url("./assets/hero.png");
   background-size: cover;
   background-position: center;
   min-height: 150px;
@@ -353,7 +380,7 @@ main {
 /* Sections */
 
 .section {
-  padding: 2.5rem 2rem;
+  padding: 2.5rem 0;
 }
 
 .section-alt {
@@ -872,17 +899,11 @@ main {
 
   .hero {
     grid-template-columns: minmax(0, 1fr);
-    padding: 2.2rem 1.2rem 2rem;
+    padding: 2.2rem 0 2rem;
   }
 
   .hero-visual {
     order: -1;
-  }
-
-  .section,
-  .section-alt,
-  .footer {
-    padding-inline: 1.2rem;
   }
 
   .grid-4 {

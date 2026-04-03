@@ -1,71 +1,132 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 function App() {
   const [navOpen, setNavOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
+
+  useEffect(() => {
+    const sections = document.querySelectorAll('[data-section]')
+    if (!sections.length) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+        if (visible[0]?.target?.id) {
+          setActiveSection(visible[0].target.id)
+        }
+      },
+      {
+        root: null,
+        threshold: [0.2, 0.4, 0.6],
+      },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section))
+      observer.disconnect()
+    }
+  }, [])
   return (
     <div className="page">
       <header className="top-bar">
-        <p>Extra 10% off on prepaid orders · Free shipping above ₹5,000</p>
+        <div className="shell">
+          <p>Extra 10% off on prepaid orders · Free shipping above ₹5,000</p>
+        </div>
       </header>
 
       <nav className="navbar">
-        <div className="navbar-left">
-          <span className="logo-mark">CR</span>
-          <div className="brand">
-            <span className="brand-name">Carpet Room</span>
-            <span className="brand-tagline">Handcrafted rugs for warm homes</span>
+        <div className="shell navbar-inner">
+          <div className="navbar-left">
+            <span className="logo-mark">CR</span>
+            <div className="brand">
+              <span className="brand-name">Carpet Room</span>
+              <span className="brand-tagline">Handcrafted rugs for warm homes</span>
+            </div>
           </div>
-        </div>
-        <div className="navbar-center">
-          <a href="#collections">Collections</a>
-          <a href="#rooms">Shop by Room</a>
-          <a href="#colors">Shop by Color</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </div>
-        <div className="navbar-right">
-          <div className="search">
-            <input placeholder="Search carpets, colors, rooms..." />
+          <div className="navbar-center">
+            <a
+              href="#collections"
+              className={activeSection === 'collections' ? 'nav-link active' : 'nav-link'}
+            >
+              Collections
+            </a>
+            <a
+              href="#rooms"
+              className={activeSection === 'rooms' ? 'nav-link active' : 'nav-link'}
+            >
+              Shop by Room
+            </a>
+            <a
+              href="#colors"
+              className={activeSection === 'colors' ? 'nav-link active' : 'nav-link'}
+            >
+              Shop by Color
+            </a>
+            <a
+              href="#about"
+              className={activeSection === 'about' ? 'nav-link active' : 'nav-link'}
+            >
+              About
+            </a>
+            <a
+              href="#contact"
+              className={activeSection === 'contact' ? 'nav-link active' : 'nav-link'}
+            >
+              Contact
+            </a>
           </div>
-          <button className="icon-button" aria-label="Wishlist">
-            ♥
-          </button>
-          <button className="icon-button" aria-label="Cart">
-            🛒
-          </button>
-          <button
-            className="icon-button menu-button"
-            aria-label="Toggle navigation"
-            onClick={() => setNavOpen((open) => !open)}
-          >
-            ☰
-          </button>
+          <div className="navbar-right">
+            <div className="search">
+              <input placeholder="Search carpets, colors, rooms..." />
+            </div>
+            <button className="icon-button" aria-label="Wishlist">
+              ♥
+            </button>
+            <button className="icon-button" aria-label="Cart">
+              🛒
+            </button>
+            <button
+              className="icon-button menu-button"
+              aria-label="Toggle navigation"
+              onClick={() => setNavOpen((open) => !open)}
+            >
+              ☰
+            </button>
+          </div>
         </div>
       </nav>
 
       {navOpen && (
         <div className="mobile-nav">
-          <a href="#collections" onClick={() => setNavOpen(false)}>
-            Collections
-          </a>
-          <a href="#rooms" onClick={() => setNavOpen(false)}>
-            Shop by Room
-          </a>
-          <a href="#colors" onClick={() => setNavOpen(false)}>
-            Shop by Color
-          </a>
-          <a href="#about" onClick={() => setNavOpen(false)}>
-            About
-          </a>
-          <a href="#contact" onClick={() => setNavOpen(false)}>
-            Contact
-          </a>
+          <div className="shell">
+            <a href="#collections" onClick={() => setNavOpen(false)}>
+              Collections
+            </a>
+            <a href="#rooms" onClick={() => setNavOpen(false)}>
+              Shop by Room
+            </a>
+            <a href="#colors" onClick={() => setNavOpen(false)}>
+              Shop by Color
+            </a>
+            <a href="#about" onClick={() => setNavOpen(false)}>
+              About
+            </a>
+            <a href="#contact" onClick={() => setNavOpen(false)}>
+              Contact
+            </a>
+          </div>
         </div>
       )}
 
       <main>
-        <section className="hero" id="hero">
+        <div className="shell">
+          <section className="hero" id="hero" data-section>
           <div className="hero-text">
             <p className="eyebrow">CURATED FOR EVERY CORNER</p>
             <h1>Elevate your space with modern, handmade carpets.</h1>
@@ -110,7 +171,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section" id="collections">
+        <section className="section" id="collections" data-section>
           <header className="section-header">
             <h2>Shop by Category</h2>
             <p>Discover designs tailored for comfort, calm, and character.</p>
@@ -151,7 +212,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section section-alt" id="new-arrivals">
+        <section className="section section-alt" id="new-arrivals" data-section>
           <header className="section-header">
             <h2>New Arrivals</h2>
             <p>Fresh palettes and patterns just added to the studio.</p>
@@ -203,7 +264,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section" id="colors">
+        <section className="section" id="colors" data-section>
           <header className="section-header">
             <h2>Shop by Color</h2>
             <p>Start with a shade that matches your mood.</p>
@@ -218,7 +279,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section section-alt" id="rooms">
+        <section className="section section-alt" id="rooms" data-section>
           <header className="section-header">
             <h2>Shop by Room</h2>
             <p>Built for every way you live at home.</p>
@@ -259,7 +320,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section" id="about">
+        <section className="section" id="about" data-section>
           <div className="two-column">
             <div>
               <header className="section-header align-left">
@@ -299,7 +360,7 @@ function App() {
           </div>
         </section>
 
-        <section className="section section-alt" id="contact">
+        <section className="section section-alt" id="contact" data-section>
           <div className="two-column contact-block">
             <div>
               <header className="section-header align-left">
@@ -348,77 +409,80 @@ function App() {
             </div>
           </div>
         </section>
+        </div>
       </main>
 
       <footer className="footer">
-        <div className="footer-top">
-          <div className="footer-brand">
-            <span className="logo-mark">CR</span>
+        <div className="shell">
+          <div className="footer-top">
+            <div className="footer-brand">
+              <span className="logo-mark">CR</span>
+              <div>
+                <p className="brand-name">Carpet Room</p>
+                <p className="brand-tagline">Thoughtful carpets for modern homes.</p>
+              </div>
+            </div>
+            <form className="newsletter" onSubmit={(e) => e.preventDefault()}>
+              <p>Sign up for new launches, styling tips, and previews.</p>
+              <div className="newsletter-input">
+                <input placeholder="Enter your email" type="email" required />
+                <button type="submit">Sign up</button>
+              </div>
+            </form>
+          </div>
+          <div className="footer-columns">
             <div>
-              <p className="brand-name">Carpet Room</p>
-              <p className="brand-tagline">Thoughtful carpets for modern homes.</p>
+              <h3>Quick links</h3>
+              <ul>
+                <li>
+                  <a href="#hero">Home</a>
+                </li>
+                <li>
+                  <a href="#collections">Collections</a>
+                </li>
+                <li>
+                  <a href="#rooms">Shop by room</a>
+                </li>
+                <li>
+                  <a href="#contact">Contact</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3>Policies</h3>
+              <ul>
+                <li>
+                  <a href="#">Shipping & delivery</a>
+                </li>
+                <li>
+                  <a href="#">Returns & exchanges</a>
+                </li>
+                <li>
+                  <a href="#">Privacy</a>
+                </li>
+                <li>
+                  <a href="#">Terms</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3>Follow</h3>
+              <ul>
+                <li>
+                  <a href="#">Instagram</a>
+                </li>
+                <li>
+                  <a href="#">Pinterest</a>
+                </li>
+                <li>
+                  <a href="#">Facebook</a>
+                </li>
+              </ul>
             </div>
           </div>
-          <form className="newsletter" onSubmit={(e) => e.preventDefault()}>
-            <p>Sign up for new launches, styling tips, and previews.</p>
-            <div className="newsletter-input">
-              <input placeholder="Enter your email" type="email" required />
-              <button type="submit">Sign up</button>
-            </div>
-          </form>
-        </div>
-        <div className="footer-columns">
-          <div>
-            <h3>Quick links</h3>
-            <ul>
-              <li>
-                <a href="#hero">Home</a>
-              </li>
-              <li>
-                <a href="#collections">Collections</a>
-              </li>
-              <li>
-                <a href="#rooms">Shop by room</a>
-              </li>
-              <li>
-                <a href="#contact">Contact</a>
-              </li>
-            </ul>
+          <div className="footer-bottom">
+            <p>© {new Date().getFullYear()} Carpet Room. All rights reserved.</p>
           </div>
-          <div>
-            <h3>Policies</h3>
-            <ul>
-              <li>
-                <a href="#">Shipping & delivery</a>
-              </li>
-              <li>
-                <a href="#">Returns & exchanges</a>
-              </li>
-              <li>
-                <a href="#">Privacy</a>
-              </li>
-              <li>
-                <a href="#">Terms</a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3>Follow</h3>
-            <ul>
-              <li>
-                <a href="#">Instagram</a>
-              </li>
-              <li>
-                <a href="#">Pinterest</a>
-              </li>
-              <li>
-                <a href="#">Facebook</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Carpet Room. All rights reserved.</p>
         </div>
       </footer>
     </div>
